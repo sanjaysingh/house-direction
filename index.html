@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Find which direction your house faces using our free House Facing Direction Finder. Enter any address to get accurate compass bearing and direction.">
+    <meta name="keywords" content="house facing direction, compass bearing, home orientation, property direction, feng shui, solar panels">
+    <meta name="author" content="House Facing Direction Finder">
+    
+    <!-- Open Graph meta tags for social sharing -->
+    <meta property="og:title" content="House Facing Direction Finder">
+    <meta property="og:description" content="Discover which direction your house faces with our easy-to-use tool. Perfect for solar panel planning, feng shui, and more.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://housedirection.sanjaysingh.net">
+    
+    <!-- Twitter Card meta tags -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="House Facing Direction Finder">
+    <meta name="twitter:description" content="Find which direction your house faces using our free online tool.">
+    
+    <title>House Facing Direction Lookup - Find Your Home's Compass Orientation</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏠</text></svg>">
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" href="styles.css" as="style">
+    
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav class="navbar" role="banner">
+        <div class="nav-container">
+            <h1 class="nav-title">🏠 House Facing Direction Finder</h1>
+        </div>
+    </nav>
+
+    <div class="container">
+        <main role="main">
+            <section class="search-section" aria-label="Address Search">
+                <div class="search-container">
+                    <label for="addressInput" class="visually-hidden">Enter your address</label>
+                    <input 
+                        type="text" 
+                        id="addressInput" 
+                        placeholder="Enter address (e.g., 123 Main St, New York, NY)"
+                        aria-describedby="search-help"
+                        autocomplete="street-address"
+                        spellcheck="false"
+                    >
+                    <button id="searchBtn" type="button" aria-describedby="search-help">
+                        <span class="btn-text">Search</span>
+                    </button>
+                </div>
+                <div id="search-help" class="visually-hidden">
+                    Enter a complete address including street, city, and state to find the facing direction
+                </div>
+                <div id="loading" class="loading hidden" role="status" aria-live="polite">
+                    <span>Searching...</span>
+                </div>
+            </section>
+
+            <section class="results-section">
+                <div class="results-container">
+                    <div id="results" class="results hidden" role="region" aria-labelledby="results-heading">
+                        <h3 id="results-heading">🧭 Facing Direction Results</h3>
+                        <div class="result-item">
+                            <label>Address:</label>
+                            <span id="foundAddress" aria-live="polite"></span>
+                        </div>
+                        <div class="result-item">
+                            <label>Primary Facing Direction:</label>
+                            <span id="facingDirection" class="direction" aria-live="polite" aria-label="House facing direction"></span>
+                        </div>
+                        <div class="result-item">
+                            <label>Compass Bearing:</label>
+                            <span id="compassBearing" aria-live="polite" aria-label="Compass bearing in degrees"></span>
+                        </div>
+                        <div class="direction-indicator">
+                            <div id="compass" class="compass" role="img" aria-label="Compass showing house facing direction">
+                                <div id="compassNeedle" class="compass-needle" aria-hidden="true"></div>
+                                <div class="compass-labels" aria-hidden="true">
+                                    <span class="compass-n">N</span>
+                                    <span class="compass-e">E</span>
+                                    <span class="compass-s">S</span>
+                                    <span class="compass-w">W</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="confidence-info">
+                            <small>* Facing direction is estimated based on building footprint and street orientation</small>
+                        </div>
+                    </div>
+
+                    <div id="error" class="error hidden" role="alert" aria-live="assertive">
+                        <h3>⚠️ Error</h3>
+                        <p id="errorMessage"></p>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Scripts loaded at end for better performance -->
+    <script src="app.js"></script>
+    
+    <!-- Add styles for screen reader only content -->
+    <style>
+        .visually-hidden {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+    </style>
+</body>
+</html> 
