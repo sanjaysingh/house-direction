@@ -51,9 +51,6 @@ class HouseFacingDirectionApp {
                 this.handleSearch();
             }
         });
-        
-        // Prevent double submissions
-        searchBtn.addEventListener('click', this.debounce(() => this.searchAddress(), 300));
     }
 
     // Utility method to prevent rapid multiple clicks
@@ -89,6 +86,7 @@ class HouseFacingDirectionApp {
         const normalizedAddress = address.toLowerCase().trim();
         if (this.cache.has(normalizedAddress)) {
             const cachedResult = this.cache.get(normalizedAddress);
+            this.resetResults(); // Clear any previous error or results
             this.displayResults(cachedResult.displayName, cachedResult.facingDirection);
             return;
         }
@@ -313,14 +311,13 @@ class HouseFacingDirectionApp {
                     method = 'street';
                 }
             } catch (error) {
-                // Continue to fallback
+                // Continue to error handling
             }
         }
 
-        // Method 3: Use improved deterministic fallback
+        // If no method worked, throw an error
         if (!result) {
-            result = this.generateDeterministicDirection(coordinates);
-            method = 'fallback';
+            throw new Error('Direction could not be determined. Try another address.');
         }
 
         return result;
@@ -644,34 +641,6 @@ class HouseFacingDirectionApp {
             lat: lineStart.lat + param * C,
             lng: lineStartLng + param * D
         };
-    }
-
-    // Improved deterministic fallback based on actual geographic patterns
-    generateDeterministicDirection(coordinates) {
-        // Create a more deterministic algorithm based on coordinate patterns
-        // This uses multiple factors to determine a consistent direction
-        
-        const lat = coordinates.lat;
-        const lng = coordinates.lng;
-        
-        // Normalize coordinates to create consistent hash
-        const latNorm = Math.round(lat * 10000) / 10000;
-        const lngNorm = Math.round(lng * 10000) / 10000;
-        
-        // Use multiple mathematical operations for better distribution
-        const factor1 = Math.abs(Math.sin(latNorm * 1000)) * 1000;
-        const factor2 = Math.abs(Math.cos(lngNorm * 1000)) * 1000;
-        const factor3 = Math.abs(Math.tan((latNorm + lngNorm) * 100)) * 100;
-        
-        // Combine factors for more deterministic result
-        const combined = (factor1 + factor2 + factor3) % 8;
-        const index = Math.floor(combined);
-        
-        const directions = ['North', 'Northeast', 'East', 'Southeast', 'South', 'Southwest', 'West', 'Northwest'];
-        const direction = directions[index];
-        const bearing = index * 45;
-        
-        return { direction, bearing };
     }
 
     getBoundingBox(coordinates, offset) {
