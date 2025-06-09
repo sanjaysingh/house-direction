@@ -38,6 +38,7 @@ class HouseFacingDirectionApp {
 
     init() {
         this.bindEvents();
+        this.checkUrlForSharedAddress(); // Check if there's a shared address in URL
     }
 
     bindEvents() {
@@ -710,6 +711,9 @@ class HouseFacingDirectionApp {
         const needle = document.getElementById('compassNeedle');
         needle.style.transform = `translate(-50%, -100%) rotate(${facingResult.bearing}deg)`;
 
+        // Update URL for sharing
+        this.updateUrlForSharing(address);
+
         this.showResults();
     }
 
@@ -735,6 +739,48 @@ class HouseFacingDirectionApp {
             document.getElementById('loading').classList.remove('hidden');
         } else {
             document.getElementById('loading').classList.add('hidden');
+        }
+    }
+
+    checkUrlForSharedAddress() {
+        try {
+            const urlParams = new URLSearchParams(window.location.search);
+            const encodedAddress = urlParams.get('addr');
+            
+            if (encodedAddress) {
+                // Decode the base64 address
+                const decodedAddress = atob(encodedAddress);
+                
+                // Set the input field with the decoded address
+                document.getElementById('addressInput').value = decodedAddress;
+                
+                // Automatically search for the address
+                this.searchAddress();
+            }
+        } catch (error) {
+            console.log('Failed to decode shared address:', error);
+            // If decoding fails, just ignore and continue normally
+        }
+    }
+
+    updateUrlForSharing(address) {
+        try {
+            // Get the original address that was searched (not the formatted display name)
+            const searchedAddress = this.getAddressInput();
+            
+            // Base64 encode the searched address
+            const encodedAddress = btoa(searchedAddress);
+            
+            // Update URL without reloading the page
+            const url = new URL(window.location);
+            url.searchParams.set('addr', encodedAddress);
+            
+            // Use replaceState to update URL without adding to browser history
+            window.history.replaceState({}, '', url);
+            
+        } catch (error) {
+            console.log('Failed to update URL for sharing:', error);
+            // Continue normally if URL update fails
         }
     }
 }
